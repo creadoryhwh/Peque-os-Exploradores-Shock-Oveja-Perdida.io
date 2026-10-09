@@ -86,18 +86,18 @@
             z-index: 10;
         }
 
-        .redil-btn.completed {
+        .level-grid-btn.completed {
             background: #059669;
             border-color: #34d399;
             color: #fff;
         }
-        .redil-btn.current {
+        .level-grid-btn.current {
             background: #d97706;
             border-color: #f59e0b;
             color: #fff;
             animation: pulse 1.5s infinite alternate;
         }
-        .redil-btn.locked {
+        .level-grid-btn.locked {
             background: rgba(20, 10, 25, 0.6);
             border-color: rgba(255,255,255,0.1);
             color: rgba(255,255,255,0.3);
@@ -134,8 +134,8 @@
             </div>
 
             <h1 class="font-cinzel text-xl sm:text-2xl font-bold text-amber-300 mb-1">Pequeños Exploradores Shock</h1>
-            <h2 class="text-xs sm:text-sm text-yellow-400 font-bold mb-3">En Busca de la Oveja Perdida</h2>
-            <p class="text-xs text-stone-300 mb-6 leading-relaxed">Rescata las ovejas del peligro, evita lobos, leones y cabras, y llévalas a salvo al Redil de Dios ⭐</p>
+            <h2 class="text-xs sm:text-sm text-yellow-400 font-bold mb-3">En Busca de las 100 Ovejas Perdidas</h2>
+            <p class="text-xs text-stone-300 mb-6 leading-relaxed">Rescata las 100 ovejas perdidas a través de 40 niveles, evita leones, lobos y serpientes, y llévalas a salvo al Redil de Dios ⭐</p>
 
             <button onclick="startApp()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-sm tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.8)] active:scale-95 transition transform">
                 <i class="fa-solid fa-play mr-2"></i> Iniciar Aventura
@@ -170,7 +170,7 @@
                     <div class="flex items-center gap-1.5 text-yellow-400 font-bold border-l border-amber-500/30 pl-2 sm:pl-3">
                         <i class="fa-solid fa-star text-amber-300 text-sm sm:text-lg drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]"></i>
                         <div class="flex flex-col text-left">
-                            <span class="text-[8px] sm:text-[9px] uppercase tracking-wider text-amber-200/70 font-semibold leading-none">ESTRELLAS</span>
+                            <span class="text-[8px] sm:text-[9px] uppercase tracking-wider text-amber-200/70 font-semibold leading-none">OVEJAS</span>
                             <span id="star-score-hud" class="font-black text-xs sm:text-base leading-none text-yellow-300">0 / 100</span>
                         </div>
                     </div>
@@ -182,16 +182,16 @@
         <!-- MAIN AREA -->
         <main class="flex-grow max-w-7xl w-full mx-auto p-2.5 sm:p-6 my-1 sm:my-2 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
             
-            <!-- MAPA DE REDILES -->
+            <!-- MAPA DE 40 NIVELES -->
             <section class="lg:col-span-3 glass-card rounded-2xl sm:rounded-3xl p-3 border border-amber-500/40 order-2 lg:order-1">
                 <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-amber-500/20">
                     <h3 class="font-cinzel text-amber-300 font-bold text-xs uppercase flex items-center gap-1">
-                        <i class="fa-solid fa-warehouse text-amber-400"></i> Rediles (25)
+                        <i class="fa-solid fa-layer-group text-amber-400"></i> Niveles (40)
                     </h3>
                     <span id="progress-percent" class="text-xs font-bold text-amber-400">0%</span>
                 </div>
 
-                <div id="rediles-list" class="space-y-2 max-h-[360px] overflow-y-auto pr-1"></div>
+                <div id="levels-list" class="grid grid-cols-4 gap-2 max-h-[360px] overflow-y-auto pr-1"></div>
             </section>
 
             <!-- CAMPO DE BÚSQUEDA -->
@@ -199,7 +199,7 @@
                 
                 <div class="flex flex-row justify-between items-center gap-2 mb-2 pb-2 border-b border-amber-500/20">
                     <span id="redil-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                        Redil 1 • Nivel 1/4
+                        Nivel 1 de 40
                     </span>
                     
                     <button onclick="hintSheep()" class="text-[11px] sm:text-xs bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 font-bold px-3 py-1 rounded-xl border border-amber-600/50 transition flex items-center gap-1.5">
@@ -208,7 +208,7 @@
                 </div>
 
                 <h2 id="instruction-text" class="text-xs sm:text-sm font-bold text-amber-100 mb-2 font-cinzel text-center">
-                    Encuentra a la oveja perdida con cinta dorada ⭐
+                    Encuentra las ovejas perdidas con cinta dorada ⭐
                 </h2>
 
                 <!-- PASTIZAL DE JUEGO -->
@@ -217,19 +217,19 @@
                 <!-- ALERTA DE RECOMPENSA -->
                 <div id="feedback-message" class="hidden absolute inset-0 bg-black/85 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center text-center p-4 z-30">
                     <i class="fa-solid fa-bolt text-5xl text-yellow-400 mb-2 animate-bounce"></i>
-                    <h3 class="text-xl font-black text-yellow-300 font-cinzel">¡OVEJA SALVADA Y LLEVADA AL REDIL!</h3>
-                    <p class="text-xs text-stone-200 mt-1">+1 Estrella agregada al Redil de Dios ⭐</p>
+                    <h3 id="feedback-title" class="text-xl font-black text-yellow-300 font-cinzel">¡OVEJA SALVADA!</h3>
+                    <p id="feedback-desc" class="text-xs text-stone-200 mt-1">+1 Oveja llevada al Redil Protegido ⭐</p>
                 </div>
 
             </section>
 
-            <!-- REDIL DERECHO DE OVEJAS RESCATADAS -->
+            <!-- REDIL DERECHO DE OVEJAS RESCATADAS (HASTA 100) -->
             <section class="lg:col-span-3 glass-card rounded-2xl sm:rounded-3xl p-3 border border-amber-500/40 order-3 flex flex-col items-center">
                 <div class="w-full flex justify-between items-center mb-2 pb-1.5 border-b border-amber-500/20 text-center">
                     <h3 class="font-cinzel text-amber-300 font-bold text-xs uppercase flex items-center gap-1">
                         <i class="fa-solid fa-fence text-amber-400"></i> Redil Protegido
                     </h3>
-                    <span id="rescued-count" class="text-xs font-black text-yellow-300">0 Ovejas</span>
+                    <span id="rescued-count" class="text-xs font-black text-yellow-300">0 / 100</span>
                 </div>
 
                 <div id="rescued-fold" class="p-2 flex flex-wrap content-start justify-center gap-1 max-h-[360px] overflow-y-auto"></div>
@@ -244,7 +244,7 @@
 
     </div>
 
-    <!-- MODAL DE PASAJE BÍBLICO AL COMPLETAR CADA REDIL -->
+    <!-- MODAL DE PASAJE BÍBLICO AL COMPLETAR CADA NIVEL -->
     <div id="bible-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
         <div class="max-w-md w-full glass-card rounded-3xl p-6 text-center border-2 border-amber-400/80 shadow-[0_0_60px_rgba(245,158,11,0.6)] flex flex-col items-center">
             
@@ -252,10 +252,10 @@
                 <i class="fa-solid fa-book-bible text-4xl text-amber-300"></i>
             </div>
 
-            <h3 id="bible-redil-title" class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">¡REDIL 1 COMPLETADO!</h3>
+            <h3 id="bible-redil-title" class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">¡NIVEL COMPLETADO!</h3>
             <h2 class="text-xl font-bold text-white font-cinzel mb-3">El Dios que nos Rescata</h2>
 
-            <div class="bg-black/60 p-4 rounded-2xl border border-amber-500/30 mb-4 text-left">
+            <div class="bg-black/60 p-4 rounded-2xl border border-amber-500/30 mb-4 text-left w-full">
                 <p id="bible-verse" class="text-xs sm:text-sm text-yellow-200 font-semibold italic mb-2 leading-relaxed"></p>
                 <p id="bible-explanation" class="text-[11px] sm:text-xs text-stone-300 leading-relaxed"></p>
             </div>
@@ -266,21 +266,21 @@
         </div>
     </div>
 
-    <!-- TROPHY MODAL FINAL (100 ESTRELLAS) -->
+    <!-- TROPHY MODAL FINAL (100 OVEJAS EN NIVEL 40) -->
     <div id="trophy-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 hidden z-50">
         <div class="max-w-md w-full glass-card rounded-3xl p-6 text-center border-2 border-yellow-400/80 shadow-[0_0_80px_rgba(255,215,0,0.6)] flex flex-col items-center">
             <div class="inline-block p-4 rounded-full bg-yellow-500/10 border-2 border-yellow-400/50 mb-2 animate-bounce">
                 <i class="fa-solid fa-trophy text-5xl text-yellow-400"></i>
             </div>
             <h3 class="text-amber-200 text-xs font-bold tracking-widest uppercase">¡MISIÓN CUMPLIDA!</h3>
-            <h2 class="text-2xl font-bold text-white font-cinzel mb-2">100 Estrellas Conquistadas</h2>
+            <h2 class="text-2xl font-bold text-white font-cinzel mb-2">100 Ovejas Rescatadas</h2>
             
             <div id="trophy-logo-container" class="my-3 p-3 w-full rounded-2xl bg-black/80 border border-yellow-500/40 flex items-center justify-center">
                 <img src="theos.png" alt="Theos Logos" class="max-h-24 object-contain" onError="renderFallbackTheosLogo('trophy-logo-container');">
             </div>
 
             <p class="text-xs sm:text-sm text-stone-300 mb-4 leading-relaxed">
-                ¡Has completado victoriosamente los 25 Rediles y rescatado a las 100 ovejas perdidas!
+                ¡Has superado victoriosamente los 40 niveles y rescatado a las 100 ovejas perdidas llevándolas al Redil Protegido de Dios!
             </p>
 
             <button onclick="resetAndPlayAgain()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-black uppercase text-xs shadow-lg">
@@ -290,33 +290,48 @@
     </div>
 
     <script>
-        // 25 PASAJES BÍBLICOS ÚNICOS SOBRE EL RESCATE DE DIOS
+        // 40 PASAJES BÍBLICOS ÚNICOS SOBRE EL AMOR Y RESCATE DE DIOS
         const bibleVersesDB = [
-            { verse: '"Porque el Hijo del Hombre vino a buscar y a salvar lo que se había perdido." — Lucas 19:10', explanation: "Explicación: Jesús no vino a juzgarnos, sino a buscarnos con amor para rescatarnos del peligro." },
-            { verse: '"Yo soy el buen pastor; el buen pastor su vida da por las ovejas." — Juan 10:11', explanation: "Explicación: Jesús cuida de nosotros de manera incomparable y dio su vida para salvarnos." },
-            { verse: '"Jehová es mi pastor; nada me faltará." — Salmos 23:1', explanation: "Explicación: Cuando confiamos en Dios como nuestro Pastor, Él nos da paz, alimento y dirección." },
-            { verse: '"¿Qué hombre de vosotros, teniendo cien ovejas, si pierde una de ellas, no deja las noventa y nueve y va tras la que se perdió?" — Lucas 15:4', explanation: "Explicación: Para Dios, cada persona es valiosa de forma individual. Él nunca te olvida." },
-            { verse: '"Habrá más gozo en el cielo por un pecador que se arrepiente..." — Lucas 15:7', explanation: "Explicación: El cielo se llena de fiesta cada vez que una persona vuelve al camino de Dios." },
-            { verse: '"Porque vosotros erais como ovejas descarriadas, pero ahora habéis vuelto al Pastor y Obispo de vuestras almas." — 1 Pedro 2:25', explanation: "Explicación: Aunque nos hayamos equivocado, Dios siempre nos recibe con los brazos abiertos." },
-            { verse: '"Mis ovejas oyen mi voz, y yo las conozco, y me siguen." — Juan 10:27', explanation: "Explicación: Escuchar la voz de Dios a través de su Palabra nos guía por el camino correcto." },
-            { verse: '"Y les doy vida eterna; y no perecerán jamás, ni nadie las arrebatará de mi mano." — Juan 10:28', explanation: "Explicación: Estamos completamente seguros en la mano protectora de Dios." },
-            { verse: '"Todos nosotros nos descarriamos como ovejas, cada cual se apartó por su camino; mas Jehová cargó en él el pecado de todos nosotros." — Isaías 53:6', explanation: "Explicación: Dios envió a Jesús para tomar nuestra carga y darnos salvación." },
-            { verse: '"Como pastor apacentará su rebaño; en su brazo llevará los corderos, y en su seno los llevará." — Isaías 40:11', explanation: "Explicación: Dios trata a los más pequeños y débiles con amor, ternura y cuidado constante." },
-            { verse: '"Yo buscaré la perdida, y haré volver la amedrentada; vendaré la perniquebrada, y fortaleceré la débil." — Ezequiel 34:16', explanation: "Explicación: Dios sana nuestras heridas del corazón y nos da nuevas fuerzas." },
-            { verse: '"Jehová está cerca de los quebrantados de corazón." — Salmos 34:18', explanation: "Explicación: Cuando nos sentimos tristes o solos, la presencia de Dios nos reconforta." },
-            { verse: '"Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar." — Mateo 11:28', explanation: "Explicación: Dios nos invita a entregarle nuestras preocupaciones para recibir su descanso." },
-            { verse: '"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito." — Juan 3:16', explanation: "Explicación: El amor de Dios hacia la humanidad es el regalo más grande de la historia." },
-            { verse: '"Si Dios es por nosotros, ¿quién contra nosotros?" — Romanos 8:31', explanation: "Explicación: Con el respaldo de Dios no hay obstáculo que no podamos superar." },
-            { verse: '"Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros." — Romanos 5:8', explanation: "Explicación: Dios nos amó primero, antes de que nosotros lo buscáramos a Él." },
-            { verse: '"Ciertamente el bien y la misericordia me seguirán todos los días de mi vida." — Salmos 23:6', explanation: "Explicación: La bondad de Dios nos acompaña en cada paso de nuestro caminar diario." },
-            { verse: '"El Señor es mi luz y mi salvación; ¿de quién temeré?" — Salmos 27:1', explanation: "Explicación: La luz de Dios ahuyenta todo miedo y nos llena de valentía." },
-            { verse: '"Clama a mí, y yo te responderé, y te enseñaré cosas grandes y ocultas que tú no conoces." — Jeremías 33:3', explanation: "Explicación: La oración activa el poder de Dios y nos revela sus hermosos planes." },
-            { verse: '"Torre fuerte es el nombre de Jehová; a él correrá el justo, y será levantado." — Proverbios 18:10', explanation: "Explicación: Dios es nuestro refugio inexpugnable donde siempre estamos a salvo." },
-            { verse: '"El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente." — Salmos 91:1', explanation: "Explicación: Quien confía en Dios vive bajo su constante sombra de protección." },
-            { verse: '"En el día que temo, yo en ti confío." — Salmos 56:3', explanation: "Explicación: La fe en Dios es la mejor respuesta ante cualquier momento de temor." },
-            { verse: '"Guárdame como a la niña de tus ojos; escóndeme bajo la sombra de tus alas." — Salmos 17:8', explanation: "Explicación: Dios nos cuida como su tesoro más valioso con máxima delicadeza." },
-            { verse: '"Gracia y paz os sean multiplicadas, en el conocimiento de Dios y de nuestro Señor Jesús." — 2 Pedro 1:2', explanation: "Explicación: Conocer a Dios llena nuestra vida de profunda paz y gracia abundante." },
-            { verse: '"Y el mismo Dios de paz os santifique por completo; y todo vuestro ser sea guardado irreprensible." — 1 Tesalonicenses 5:23', explanation: "Explicación: Dios nos santifica y nos guarda seguros hasta el día de su regreso final." }
+            { verse: '"Porque el Hijo del Hombre vino a buscar y a salvar lo que se había perdido." — Lucas 19:10', explanation: "Explicación: Jesús vino a buscarnos con un amor inagotable para rescatarnos de todo peligro." },
+            { verse: '"Yo soy el buen pastor; el buen pastor su vida da por las ovejas." — Juan 10:11', explanation: "Explicación: Jesús cuida de nosotros de manera única y entrego su vida por nuestra protección." },
+            { verse: '"Jehová es mi pastor; nada me faltará." — Salmos 23:1', explanation: "Explicación: Al confiar en Dios como nuestro Guía, Él suplirá todo lo que necesitamos en paz." },
+            { verse: '"¿Qué hombre de vosotros, teniendo cien ovejas, si pierde una de ellas, no va tras la que se perdió?" — Lucas 15:4', explanation: "Explicación: Cada persona es infinitamente valiosa para Dios, Él nunca te dejará olvidado." },
+            { verse: '"Habrá más gozo en el cielo por un pecador que se arrepiente..." — Lucas 15:7', explanation: "Explicación: El cielo celebra con gran alegría cada vez que alguien vuelve a los brazos de Dios." },
+            { verse: '"Erais como ovejas descarriadas, pero ahora habéis vuelto al Pastor de vuestras almas." — 1 Pedro 2:25', explanation: "Explicación: Aunque nos desviemos, la gracia de Dios siempre está lista para traernos de vuelta." },
+            { verse: '"Mis ovejas oyen mi voz, y yo las conozco, y me siguen." — Juan 10:27', explanation: "Explicación: Escuchar y seguir la voz de Dios nos libra de caer en las trampas del enemigo." },
+            { verse: '"Y les doy vida eterna; y no perecerán jamás, ni nadie las arrebatará de mi mano." — Juan 10:28', explanation: "Explicación: Nada en el mundo puede separarte de la poderosa mano protectora del Señor." },
+            { verse: '"Todos nosotros nos descarriamos como ovejas; mas Jehová cargó en él el pecado de todos." — Isaías 53:6', explanation: "Explicación: Jesús tomó nuestras cargas para abrirnos camino seguro a la vida eterna." },
+            { verse: '"Como pastor apacentará su rebaño; en su brazo llevará los corderos." — Isaías 40:11', explanation: "Explicación: Dios trata a los más pequeños y vulnerables con extrema ternura y cariño." },
+            { verse: '"Yo buscaré la perdida, y haré volver la amedrentada; vendaré la perniquebrada." — Ezequiel 34:16', explanation: "Explicación: Dios restaura nuestros corazones lastimados y nos llena de nueva fortaleza." },
+            { verse: '"Cerca está Jehová de los quebrantados de corazón; y salva a los contritos de espíritu." — Salmos 34:18', explanation: "Explicación: Cuando enfrentas momentos difíciles, la reconfortante presencia de Dios te abraza." },
+            { verse: '"Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar." — Mateo 11:28', explanation: "Explicación: Entrega tus angustias a Dios; Él te dará el verdadero descanso del alma." },
+            { verse: '"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito." — Juan 3:16', explanation: "Explicación: El amor de Dios es el regalo rescate más grandioso de la historia." },
+            { verse: '"Si Dios es por nosotros, ¿quién contra nosotros?" — Romanos 8:31', explanation: "Explicación: Caminando con Dios a nuestro lado no hay gigante ni peligro que nos pueda vencer." },
+            { verse: '"Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros." — Romanos 5:8', explanation: "Explicación: El amor de Dios es incondicional; Él nos amó desde antes de que le conociéramos." },
+            { verse: '"Ciertamente el bien y la misericordia me seguirán todos los días de mi vida." — Salmos 23:6', explanation: "Explicación: La bondad y fidelidad del Señor acompañan cada uno de tus pasos." },
+            { verse: '"El Señor es mi luz y mi salvación; ¿de quién temeré?" — Salmos 27:1', explanation: "Explicación: La luz celestial de Dios disipa toda oscuridad y ahuyenta cualquier temor." },
+            { verse: '"Clama a mí, y yo te responderé, y te enseñaré cosas grandes y ocultas." — Jeremías 33:3', explanation: "Explicación: Dios escucha cada oracion y te revelará sus maravillosos propósitos." },
+            { verse: '"Torre fuerte es el nombre de Jehová; a él correrá el justo, y será levantado." — Proverbios 18:10', explanation: "Explicación: El nombre del Señor es un refugio inexpugnable donde siempre estarás seguro." },
+            { verse: '"El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente." — Salmos 91:1', explanation: "Explicación: Vivir cerca de Dios nos mantiene bajo su sombra protectora a cada instante." },
+            { verse: '"En el día que temo, yo en ti confío." — Salmos 56:3', explanation: "Explicación: La fe firme en Dios es el mejor escudo para superar momentos de incertidumbre." },
+            { verse: '"Guárdame como a la niña de tus ojos; escóndeme bajo la sombra de tus alas." — Salmos 17:8', explanation: "Explicación: Para Dios eres su tesoro más preciado y te protege con delgadez absoluta." },
+            { verse: '"Gracia y paz os sean multiplicadas en el conocimiento de Dios." — 2 Pedro 1:2', explanation: "Explicación: Entre más conocemos a Dios, más abundan la gracia y la tranquilidad en nuestro corazón." },
+            { verse: '"Y el mismo Dios de paz os santifique por completo; y todo vuestro ser sea guardado." — 1 Tesalonicenses 5:23', explanation: "Explicación: Dios te sostiene y guarda todo tu ser limpio y protegido." },
+            { verse: '"Jehová te guardará de todo mal; él guardará tu alma." — Salmos 121:7', explanation: "Explicación: Dios vela por ti de noche y de día librándote de todo mal." },
+            { verse: '"Jehová guardará tu salida y tu entrada desde ahora y para siempre." — Salmos 121:8', explanation: "Explicación: Cada viaje o paso que des está bajo la atenta mirada de tu Creador." },
+            { verse: '"Buscad a Jehová mientras puede ser hallado, llamadle en tanto que está cercano." — Isaías 55:6', explanation: "Explicación: Buscar a Dios hoy es la mejor decisión que podemos tomar en nuestra juventud." },
+            { verse: '"Instruye al niño en su camino, y aun cuando fuere viejo no se apartará de él." — Proverbios 22:6', explanation: "Explicación: Aprender las enseñas bíblicas desde pequeños nos da sabiduría para toda la vida." },
+            { verse: '"Lámpara es a mis pies tu palabra, y lumbrera a mi camino." — Salmos 119:105', explanation: "Explicación: La Palabra de Dios nos alumbra para tomar siempre decisiones correctas." },
+            { verse: '"Todo lo puedo en Cristo que me fortalece." — Filipenses 4:13', explanation: "Explicación: Con la fuerza que Cristo te da, no existen metas inalcanzables." },
+            { verse: '"No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios." — Isaías 41:10', explanation: "Explicación: Dios te toma de la mano derecha y te sostiene en todo momento." },
+            { verse: '"El amor es sufrido, es benigno; el amor no tiene envidia." — 1 Corintios 13:4', explanation: "Explicación: El amor de Dios nos enseña a tratar a todos con bondad y respeto." },
+            { verse: '"Amarás al Señor tu Dios con todo tu corazón, y a tu prójimo como a ti mismo." — Mateo 22:37-39', explanation: "Explicación: Amar a Dios y ayudar a nuestro prójimo son las bases de una vida feliz." },
+            { verse: '"Bienaventurados los de limpio corazón, porque ellos verán a Dios." — Mateo 5:8', explanation: "Explicación: Mantener intenciones puras nos acerca cada día más a la presencia de Dios." },
+            { verse: '"Porque donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos." — Mateo 18:20', explanation: "Explicación: Cuando nos unimos a buscar a Dios, su gloriosa presencia llena el lugar." },
+            { verse: '"Someteos, pues, a Dios; resistid al diablo, y huirá de vosotros." — Santiago 4:7', explanation: "Explicación: Obedecer a Dios nos hace victoriosos frente a cualquier tentación." },
+            { verse: '"El Señor no retarda su promesa, según algunos la tienen por tardanza..." — 2 Pedro 3:9', explanation: "Explicación: Las promesas de Dios siempre se cumplen en su tiempo perfecto." },
+            { verse: '"He aquí, yo estoy a la puerta y llamo; si alguno oye mi voz y abre la puerta, entraré a él." — Apocalipsis 3:20', explanation: "Explicación: Jesús toca la puerta de nuestro corazón para darnos vida y bendición." },
+            { verse: '"Y el Espíritu y la Esposa dicen: Ven. Y el que oye, diga: Ven." — Apocalipsis 22:17', explanation: "Explicación: Dios nos invita a disfrutar libremente de las aguas de la vida eterna." }
         ];
 
         function renderFallbackShockLogo(containerId, height = 48) {
@@ -344,7 +359,7 @@
             `;
         }
 
-        // SILUETAS VECTORIALES (OVEJA, CABRA, LEÓN, LOBO, SERPIENTE, MONTAÑA, ROCA)
+        // VECTORS SVG INTERACTIVOS
         const sheepSVG = `
             <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
                 <ellipse cx="50" cy="55" rx="28" ry="20" fill="#ffffff" />
@@ -373,7 +388,7 @@
             </svg>
         `;
 
-        // SILUETAS NEGRAS DE DEPREDADORES Y OBSTÁCULOS
+        // SILUETAS NEGRAS VECTORIALES
         const lionSilhouetteSVG = `
             <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">
                 <circle cx="50" cy="40" r="22" fill="#000000" />
@@ -417,12 +432,21 @@
             </svg>
         `;
 
+        // DISTRIBUCIÓN DE LAS 100 OVEJAS A LO LARGO DE LOS 40 NIVELES (2 o 3 por nivel)
+        const sheepPerLevelArr = [];
+        for (let lvl = 0; lvl < 40; lvl++) {
+            // 20 niveles tendrán 2 ovejas y 20 niveles tendrán 3 ovejas (20*2 + 20*3 = 100)
+            sheepPerLevelArr.push(lvl % 2 === 0 ? 2 : 3);
+        }
+
         // ESTADO DEL JUEGO
-        let currentLevel = 0;
+        let currentLevel = 0; // 0..39
         let maxUnlockedLevel = 0;
         let completedLevels = new Set();
+        let totalRescuedSheepCount = 0;
+        let levelRemainingSheep = 0;
+        let lostSheepIndexes = [];
         let isAudioEnabled = true;
-        let lostSheepIndex = -1;
         let bestVoice = null;
 
         function startApp() {
@@ -430,93 +454,79 @@
             loadNaturalVoice();
             document.getElementById('start-overlay').style.display = 'none';
             loadSavedProgress();
-            renderRedilesList();
+            renderLevelsList();
             renderRescuedFold();
             loadLevel();
         }
 
         function loadSavedProgress() {
             try {
-                const savedMax = localStorage.getItem('exploradores_max');
-                const savedCompleted = localStorage.getItem('exploradores_completed');
+                const savedMax = localStorage.getItem('exploradores_40_max');
+                const savedCompleted = localStorage.getItem('exploradores_40_completed');
+                const savedSheep = localStorage.getItem('exploradores_40_sheep');
+
                 if (savedMax !== null) maxUnlockedLevel = parseInt(savedMax, 10);
                 if (savedCompleted !== null) completedLevels = new Set(JSON.parse(savedCompleted));
+                if (savedSheep !== null) totalRescuedSheepCount = parseInt(savedSheep, 10);
             } catch(e) {}
             updateHUD();
         }
 
         function saveProgress() {
             try {
-                localStorage.setItem('exploradores_max', maxUnlockedLevel);
-                localStorage.setItem('exploradores_completed', JSON.stringify(Array.from(completedLevels)));
+                localStorage.setItem('exploradores_40_max', maxUnlockedLevel);
+                localStorage.setItem('exploradores_40_completed', JSON.stringify(Array.from(completedLevels)));
+                localStorage.setItem('exploradores_40_sheep', totalRescuedSheepCount);
             } catch(e) {}
         }
 
         function updateHUD() {
-            document.getElementById('star-score-hud').innerText = `${completedLevels.size} / 100`;
-            document.getElementById('rescued-count').innerText = `${completedLevels.size} Ovejas`;
-            const currentRedil = Math.floor(currentLevel / 4) + 1;
-            const subLvl = (currentLevel % 4) + 1;
-            document.getElementById('redil-badge').innerText = `Redil ${currentRedil} • Nivel ${subLvl}/4`;
+            document.getElementById('star-score-hud').innerText = `${totalRescuedSheepCount} / 100`;
+            document.getElementById('rescued-count').innerText = `${totalRescuedSheepCount} / 100`;
+            document.getElementById('redil-badge').innerText = `Nivel ${currentLevel + 1} de 40`;
         }
 
         function renderRescuedFold() {
             const fold = document.getElementById('rescued-fold');
             if (!fold) return;
             fold.innerHTML = '';
-            completedLevels.forEach(() => {
+            for (let i = 0; i < totalRescuedSheepCount; i++) {
                 const s = document.createElement('div');
                 s.className = 'p-0.5 animate-pulse';
                 s.innerHTML = sheepSVG;
                 fold.appendChild(s);
-            });
+            }
         }
 
-        function renderRedilesList() {
-            const container = document.getElementById('rediles-list');
+        function renderLevelsList() {
+            const container = document.getElementById('levels-list');
             if (!container) return;
             container.innerHTML = '';
 
-            for (let r = 1; r <= 25; r++) {
-                const redilDiv = document.createElement('div');
-                redilDiv.className = "bg-stone-900/60 p-2 rounded-xl border border-amber-500/20";
-                
-                const startLvl = (r - 1) * 4;
-                redilDiv.innerHTML = `
-                    <div class="text-[10px] font-bold text-amber-300 mb-1 flex justify-between">
-                        <span>Redil ${r}</span>
-                        <span class="text-stone-400">Niveles ${startLvl + 1} - ${startLvl + 4}</span>
-                    </div>
-                    <div class="grid grid-cols-4 gap-1.5" id="redil-grid-${r}"></div>
-                `;
-                container.appendChild(redilDiv);
+            for (let i = 0; i < 40; i++) {
+                const btn = document.createElement('button');
+                let state = 'locked';
+                if (completedLevels.has(i)) state = 'completed';
+                else if (i === currentLevel) state = 'current';
+                else if (i <= maxUnlockedLevel) state = 'bg-stone-800 text-amber-300 border-amber-500/40';
 
-                const grid = document.getElementById(`redil-grid-${r}`);
-                for (let i = startLvl; i < startLvl + 4; i++) {
-                    const btn = document.createElement('button');
-                    let state = 'locked';
-                    if (completedLevels.has(i)) state = 'completed';
-                    else if (i === currentLevel) state = 'current';
-                    else if (i <= maxUnlockedLevel) state = 'bg-stone-800 text-amber-300 border-amber-500/40';
+                btn.className = `level-grid-btn ${state} border h-9 rounded-xl text-xs font-bold flex items-center justify-center`;
+                btn.innerText = i + 1;
 
-                    btn.className = `redil-btn ${state} border h-7 rounded-lg text-[10px] font-bold flex items-center justify-center`;
-                    btn.innerText = i + 1;
-
-                    if (i <= maxUnlockedLevel) {
-                        btn.onclick = () => {
-                            currentLevel = i;
-                            renderRedilesList();
-                            loadLevel();
-                        };
-                    } else {
-                        btn.disabled = true;
-                    }
-
-                    grid.appendChild(btn);
+                if (i <= maxUnlockedLevel) {
+                    btn.onclick = () => {
+                        currentLevel = i;
+                        renderLevelsList();
+                        loadLevel();
+                    };
+                } else {
+                    btn.disabled = true;
                 }
+
+                container.appendChild(btn);
             }
 
-            const percent = Math.round((completedLevels.size / 100) * 100);
+            const percent = Math.round((completedLevels.size / 40) * 100);
             document.getElementById('progress-percent').innerText = `${percent}%`;
         }
 
@@ -527,14 +537,26 @@
             pasture.innerHTML = '';
             document.getElementById('feedback-message').classList.add('hidden');
 
-            const animalCount = Math.min(6 + Math.floor(currentLevel / 5), 18);
-            const goatCount = Math.min(2 + Math.floor(currentLevel / 8), 6);
-            const predatorCount = Math.min(1 + Math.floor(currentLevel / 10), 5);
-            
-            lostSheepIndex = Math.floor(Math.random() * (animalCount - goatCount));
+            const targetSheepInLevel = sheepPerLevelArr[currentLevel];
+            levelRemainingSheep = targetSheepInLevel;
 
-            // Obstáculos (Montañas y Rocas Negras)
-            const obstacleCount = Math.min(2 + Math.floor(currentLevel / 10), 5);
+            const normalSheepCount = 4 + Math.floor(currentLevel / 5);
+            const goatCount = 2 + Math.floor(currentLevel / 8);
+            const predatorCount = 2 + Math.floor(currentLevel / 10);
+            
+            const totalAnimals = targetSheepInLevel + normalSheepCount + goatCount + predatorCount;
+            
+            // Seleccionar posiciones aleatorias para las ovejas perdidas (con cinta dorada)
+            lostSheepIndexes = [];
+            while (lostSheepIndexes.length < targetSheepInLevel) {
+                const randIdx = Math.floor(Math.random() * (targetSheepInLevel + normalSheepCount));
+                if (!lostSheepIndexes.includes(randIdx)) {
+                    lostSheepIndexes.push(randIdx);
+                }
+            }
+
+            // Obstáculos
+            const obstacleCount = 2 + Math.floor(currentLevel / 10);
             for (let i = 0; i < obstacleCount; i++) {
                 const obs = document.createElement('div');
                 const isMountain = Math.random() > 0.5;
@@ -545,16 +567,16 @@
                 pasture.appendChild(obs);
             }
 
-            // Generar Ovejas
-            for (let i = 0; i < animalCount - goatCount; i++) {
+            // Generar Ovejas Perdidas y Normales
+            for (let i = 0; i < targetSheepInLevel + normalSheepCount; i++) {
                 const btn = document.createElement('div');
                 btn.className = 'animal-btn';
                 btn.style.left = `${8 + Math.random() * 80}%`;
                 btn.style.top = `${12 + Math.random() * 72}%`;
 
-                if (i === lostSheepIndex) {
+                if (lostSheepIndexes.includes(i)) {
                     btn.innerHTML = `<div class="relative">${sheepSVG}<i class="fa-solid fa-ribbon text-yellow-400 text-xs absolute -top-1 -right-1 drop-shadow-[0_0_8px_rgba(250,204,21,1)]"></i></div>`;
-                    btn.onclick = (e) => foundLostSheep(e);
+                    btn.onclick = (e) => foundLostSheep(e, btn);
                 } else {
                     btn.innerHTML = sheepSVG;
                     btn.onclick = () => wrongAnimal('sheep');
@@ -573,7 +595,7 @@
                 pasture.appendChild(btn);
             }
 
-            // Generar Depredadores en Silueta Negra
+            // Generar Depredadores
             const predatorTypes = ['wolf', 'lion', 'snake'];
             for (let i = 0; i < predatorCount; i++) {
                 const pType = predatorTypes[i % predatorTypes.length];
@@ -590,13 +612,13 @@
                 pasture.appendChild(btn);
             }
 
-            speakText(`Nivel ${currentLevel + 1}. Busca la oveja perdida y evita los peligros.`);
+            speakText(`Nivel ${currentLevel + 1}. Encuentra las ${targetSheepInLevel} ovejas perdidas con cinta dorada.`);
         }
 
         function wrongAnimal(type) {
             playErrorSound();
             if (type === 'goat') {
-                speakText("¡Esa es una cabra, no es una oveja! Sigue buscando.");
+                speakText("¡Esa es una cabra, no es una oveja perdida! Sigue buscando.");
             } else if (type === 'wolf') {
                 speakText("¡Cuidado explorador, ese es un lobo feroz!");
             } else if (type === 'lion') {
@@ -604,46 +626,65 @@
             } else if (type === 'snake') {
                 speakText("¡Cuidado explorador, esa es una serpiente!");
             } else {
-                speakText("Esa es una oveja del rebaño, busca la que tiene la cinta dorada.");
+                speakText("Esa es una oveja del rebaño; busca la que tiene la cinta dorada.");
             }
         }
 
-        function foundLostSheep(event) {
+        function foundLostSheep(event, element) {
             playWinSound();
 
             const rect = event.currentTarget.getBoundingClientRect();
             const posX = rect.left + rect.width / 2;
             const posY = rect.top + rect.height / 2;
 
+            // RAYOS DEL LOGO, GLOBOS DE COLORES Y CINTAS DE COLORES POR CADA OVEJA
             triggerTargetedLightningStrike(posX, posY);
             spawnCelebrationBurst(posX, posY);
 
-            if (!completedLevels.has(currentLevel)) {
-                completedLevels.add(currentLevel);
-            }
+            element.style.pointerEvents = 'none';
+            element.style.opacity = '0.3';
 
-            if (currentLevel + 1 > maxUnlockedLevel && currentLevel + 1 < 100) {
-                maxUnlockedLevel = currentLevel + 1;
-            }
+            totalRescuedSheepCount++;
+            levelRemainingSheep--;
 
             saveProgress();
             updateHUD();
             renderRescuedFold();
 
-            document.getElementById('feedback-message').classList.remove('hidden');
+            if (levelRemainingSheep > 0) {
+                // Aún faltan ovejas en este nivel
+                document.getElementById('feedback-title').innerText = "¡OVEJA RESCATADA!";
+                document.getElementById('feedback-desc').innerText = `+1 Oveja llevada al Redil. ¡Faltan ${levelRemainingSheep} en este nivel!`;
+                document.getElementById('feedback-message').classList.remove('hidden');
 
-            speakText("¡Excelente! Encontraste a la oveja perdida.", () => {
-                setTimeout(() => {
-                    const isRedilCompleted = ((currentLevel + 1) % 4 === 0) || currentLevel === 99;
-                    if (isRedilCompleted) {
+                speakText(`¡Excelente! Rescataste una oveja. Te faltan ${levelRemainingSheep}.`, () => {
+                    setTimeout(() => {
+                        document.getElementById('feedback-message').classList.add('hidden');
+                    }, 1000);
+                });
+            } else {
+                // Completadas todas las ovejas del nivel
+                if (!completedLevels.has(currentLevel)) {
+                    completedLevels.add(currentLevel);
+                }
+
+                if (currentLevel + 1 > maxUnlockedLevel && currentLevel + 1 < 40) {
+                    maxUnlockedLevel = currentLevel + 1;
+                }
+
+                saveProgress();
+                renderLevelsList();
+
+                document.getElementById('feedback-title').innerText = "¡NIVEL COMPLETADO!";
+                document.getElementById('feedback-desc').innerText = "¡Todas las ovejas del nivel están a salvo!";
+                document.getElementById('feedback-message').classList.remove('hidden');
+
+                speakText("¡Grandioso! Has rescatado a todas las ovejas perdidas de este nivel.", () => {
+                    setTimeout(() => {
                         showBibleModal();
-                    } else {
-                        if (currentLevel < 99) currentLevel++;
-                        renderRedilesList();
-                        loadLevel();
-                    }
-                }, 1200);
-            });
+                    }, 1200);
+                });
+            }
         }
 
         function formatVerseForSpeech(verseText, explanationText) {
@@ -651,20 +692,16 @@
                 .replace(/1\s+Pedro/gi, "Primera de Pedro")
                 .replace(/2\s+Pedro/gi, "Segunda de Pedro")
                 .replace(/1\s+Juan/gi, "Primera de Juan")
-                .replace(/2\s+Juan/gi, "Segunda de Juan")
-                .replace(/3\s+Juan/gi, "Tercera de Juan")
                 .replace(/1\s+Tesalonicenses/gi, "Primera de Tesalonicenses")
-                .replace(/2\s+Tesalonicenses/gi, "Segunda de Tesalonicenses")
                 .replace(/(\d+):(\d+)/g, "capítulo $1, verso $2");
 
             return `${spoken}. ${explanationText}`;
         }
 
         function showBibleModal() {
-            const currentRedilNum = Math.floor(currentLevel / 4) + 1;
-            const verseData = bibleVersesDB[(currentRedilNum - 1) % bibleVersesDB.length];
+            const verseData = bibleVersesDB[currentLevel % bibleVersesDB.length];
 
-            document.getElementById('bible-redil-title').innerText = `¡REDIL ${currentRedilNum} COMPLETADO!`;
+            document.getElementById('bible-redil-title').innerText = `¡NIVEL ${currentLevel + 1} COMPLETADO!`;
             document.getElementById('bible-verse').innerText = verseData.verse;
             document.getElementById('bible-explanation').innerText = verseData.explanation;
 
@@ -677,11 +714,10 @@
 
             const textForSpeech = formatVerseForSpeech(verseData.verse, verseData.explanation);
             
-            // Hablar y activar el botón SOLO cuando termine de hablar
-            speakText(`¡Redil ${currentRedilNum} completado! ${textForSpeech}`, () => {
+            speakText(`¡Nivel ${currentLevel + 1} completado! ${textForSpeech}`, () => {
                 closeBtn.disabled = false;
                 closeBtn.className = "w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-xs shadow-lg active:scale-95 transition cursor-pointer";
-                closeBtn.innerHTML = `<i class="fa-solid fa-arrow-right mr-1.5"></i> Continuar al Siguiente Redil`;
+                closeBtn.innerHTML = `<i class="fa-solid fa-arrow-right mr-1.5"></i> Continuar al Siguiente Nivel`;
             });
         }
 
@@ -689,26 +725,28 @@
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             document.getElementById('bible-modal').classList.add('hidden');
 
-            if (completedLevels.size === 100) {
+            if (totalRescuedSheepCount >= 100 || currentLevel === 39) {
                 document.getElementById('trophy-modal').classList.remove('hidden');
             } else {
-                if (currentLevel < 99) currentLevel++;
-                renderRedilesList();
+                if (currentLevel < 39) currentLevel++;
+                renderLevelsList();
                 loadLevel();
             }
         }
 
         function hintSheep() {
             playWinSound();
-            speakText("¡Atención explorador! Te muestro dónde está.");
+            speakText("¡Atención explorador! Te muestro las ovejas perdidas.");
             const pasture = document.getElementById('game-pasture');
             if (!pasture) return;
             const animals = pasture.getElementsByClassName('animal-btn');
-            if (animals[lostSheepIndex]) {
-                const el = animals[lostSheepIndex];
-                el.style.transform = 'scale(1.6)';
-                setTimeout(() => el.style.transform = 'scale(1)', 900);
-            }
+            lostSheepIndexes.forEach(idx => {
+                if (animals[idx]) {
+                    const el = animals[idx];
+                    el.style.transform = 'scale(1.6)';
+                    setTimeout(() => el.style.transform = 'scale(1)', 900);
+                }
+            });
         }
 
         let audioCtx = null;
@@ -791,27 +829,30 @@
         }
 
         function confirmReset() {
-            if (confirm("¿Deseas reiniciar todo tu progreso y volver al Nivel 1 del Redil 1?")) {
+            if (confirm("¿Deseas reiniciar todo tu progreso y volver al Nivel 1 con 0 ovejas rescadadas?")) {
                 resetAndPlayAgain();
             }
         }
 
         function resetAndPlayAgain() {
             try {
-                localStorage.removeItem('exploradores_max');
-                localStorage.removeItem('exploradores_completed');
+                localStorage.removeItem('exploradores_40_max');
+                localStorage.removeItem('exploradores_40_completed');
+                localStorage.removeItem('exploradores_40_sheep');
             } catch(e) {}
             completedLevels.clear();
             maxUnlockedLevel = 0;
             currentLevel = 0;
+            totalRescuedSheepCount = 0;
             updateHUD();
             document.getElementById('trophy-modal').classList.add('hidden');
             document.getElementById('bible-modal').classList.add('hidden');
-            renderRedilesList();
+            renderLevelsList();
             renderRescuedFold();
             loadLevel();
         }
 
+        // CANVAS Y EFECTOS MULTICOLOR (RAYOS, GLOBOS, CINTAS DE COLORES)
         const celebrationCanvas = document.getElementById('celebration-canvas');
         const cCtx = celebrationCanvas ? celebrationCanvas.getContext('2d') : null;
         let celebrationItems = [];
@@ -831,8 +872,9 @@
         }
 
         function spawnCelebrationBurst(x, y) {
-            const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
+            const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#eab308'];
 
+            // Cintas coloridas
             for (let i = 0; i < 40; i++) {
                 celebrationItems.push({
                     type: Math.random() > 0.4 ? 'confetti' : 'ribbon',
@@ -847,7 +889,8 @@
                 });
             }
 
-            for (let i = 0; i < 8; i++) {
+            // Globos coloridos flotantes
+            for (let i = 0; i < 10; i++) {
                 celebrationItems.push({
                     type: 'balloon',
                     x: x + (Math.random() - 0.5) * 80,
@@ -865,6 +908,7 @@
             if (!cCtx) return;
             cCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
+            // Rayos del Logo de la Estación
             if (lightningStrike && lightningStrike.alpha > 0) {
                 cCtx.save();
                 cCtx.beginPath();
