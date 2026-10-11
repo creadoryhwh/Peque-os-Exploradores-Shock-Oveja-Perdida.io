@@ -37,7 +37,7 @@
         }
 
         .glass-card {
-            background: rgba(18, 8, 25, 0.92);
+            background: rgba(18, 8, 25, 0.94);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 185, 50, 0.4);
@@ -125,21 +125,37 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between relative selection:bg-amber-500 selection:text-black">
 
-    <!-- OVERLAY INICIAL -->
-    <div id="start-overlay" class="fixed inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-6 text-center">
-        <div class="max-w-md glass-card rounded-3xl p-6 sm:p-8 border-2 border-amber-500/80 shadow-[0_0_50px_rgba(245,158,11,0.5)] flex flex-col items-center">
+    <!-- OVERLAY DE NARRATIVA PROFUNDA INICIAL -->
+    <div id="narrative-overlay" class="fixed inset-0 bg-black/98 z-50 flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+        <div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-8 border-2 border-amber-500/80 shadow-[0_0_60px_rgba(245,158,11,0.5)] flex flex-col items-center">
             
-            <div id="start-logo-container" class="h-16 mb-4 flex items-center justify-center">
-                <img src="shock.png" alt="Shock 99.5 FM" class="h-16 object-contain drop-shadow-[0_0_15px_rgba(255,120,0,0.8)]" onError="renderFallbackShockLogo('start-logo-container', 64);">
+            <div id="narrative-logo-container" class="h-16 mb-4 flex items-center justify-center">
+                <img src="shock.png" alt="Shock 99.5 FM" class="h-16 object-contain drop-shadow-[0_0_15px_rgba(255,120,0,0.8)]" onError="renderFallbackShockLogo('narrative-logo-container', 64);">
             </div>
 
-            <h1 class="font-cinzel text-xl sm:text-2xl font-bold text-amber-300 mb-1">Pequeños Exploradores Shock</h1>
-            <h2 class="text-xs sm:text-sm text-yellow-400 font-bold mb-3">En Busca de las 100 Ovejas Perdidas</h2>
-            <p class="text-xs text-stone-300 mb-6 leading-relaxed">Rescata las 100 ovejas perdidas a través de 40 niveles, evita leones, lobos y serpientes, y llévalas a salvo al Redil de Dios ⭐</p>
+            <h1 class="font-cinzel text-lg sm:text-2xl font-bold text-amber-300 mb-1">El Buen Pastor y la Oveja Perdida</h1>
+            <h2 class="text-xs sm:text-sm text-yellow-400 font-bold mb-4 uppercase tracking-wider">Lucas 15:4 • Un Amor que no se Rinde</h2>
 
-            <button onclick="startApp()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-sm tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.8)] active:scale-95 transition transform">
-                <i class="fa-solid fa-play mr-2"></i> Iniciar Aventura
-            </button>
+            <div class="bg-amber-950/40 p-4 sm:p-5 rounded-2xl border border-amber-500/30 mb-6 text-left max-h-[220px] sm:max-h-[260px] overflow-y-auto space-y-3">
+                <p id="narrative-text-1" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
+                    En medio de los campos y colinas de Judea, el pastor cuida con esmero de su rebaño. Cada oveja tiene un nombre y es amada profundamente. Sin embargo, en un descuido o buscando nuevos horizontes, una pequeña oveja se aparta del camino y se pierde en la espesura, expuesta al peligro y a la soledad.
+                </p>
+                <p id="narrative-text-2" class="text-xs sm:text-sm text-stone-200 leading-relaxed">
+                    Lejos de darla por olvidada, el Buen Pastor deja las noventa y nueve en el aprisco y emprende un viaje lleno de valentía para buscar a la que se había extraviado, hasta que la halla con alegría. Esa es la historia de cómo Jesús vino a buscar y a salvar lo que se había perdido, mostrando un amor inagotable.
+                </p>
+                <p id="narrative-text-3" class="text-xs sm:text-sm text-amber-200 font-semibold leading-relaxed border-t border-amber-500/30 pt-3">
+                    Hoy, este juego nos recuerda nuestra hermosa misión de reflejar ese mismo amor. Hay corazones que necesitan ser alcanzados y rescatados. ¡Seamos fieles exploradores, llevemos el mensaje de salvación y acompáñanos a rescatar las 100 ovejas perdidas llevándolas al Redil Protegido de Dios!
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 w-full">
+                <button onclick="triggerNarrativeVoice()" class="flex-1 py-3 px-4 rounded-xl bg-amber-900/60 border border-amber-500/40 text-amber-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-volume-high text-yellow-400"></i> Escuchar Narración
+                </button>
+                <button id="start-mission-btn" onclick="startMainGameFromNarrative()" disabled class="flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i> Esperando Narración...
+                </button>
+            </div>
         </div>
     </div>
 
@@ -156,8 +172,15 @@
                     <img src="shock.png" alt="Shock 99.5 FM" class="h-9 sm:h-14 object-contain drop-shadow-[0_0_12px_rgba(255,120,0,0.8)]" onError="renderFallbackShockLogo('header-logo-container', 48);">
                 </div>
 
-                <!-- HUD STAR SCORE -->
+                <!-- HUD STAR SCORE E ICONO DE RESEÑA -->
                 <div class="flex items-center gap-1.5 sm:gap-3 bg-stone-900/90 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-amber-500/40">
+                    
+                    <!-- BOTÓN ICONO DE LA RESEÑA BÍBLICA -->
+                    <button onclick="openNarrativeModal()" class="text-yellow-400 hover:text-yellow-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2.5 sm:px-3 py-1 rounded-lg border border-amber-600/40" title="Reseña del Buen Pastor">
+                        <i class="fa-solid fa-book-bible text-yellow-300 text-xs sm:text-sm animate-pulse"></i>
+                        <span class="hidden md:inline">El Buen Pastor</span>
+                    </button>
+
                     <button id="tts-toggle" onclick="toggleAudio()" class="text-amber-400 hover:text-amber-300 transition flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-950/60 px-2 sm:px-3 py-1 rounded-lg border border-amber-600/40">
                         <i id="tts-icon" class="fa-solid fa-volume-high text-xs"></i>
                         <span id="tts-status" class="hidden sm:inline">Voz ON</span>
@@ -388,7 +411,6 @@
             </svg>
         `;
 
-        // SILUETAS NEGRAS VECTORIALES
         const lionSilhouetteSVG = `
             <svg viewBox="0 0 100 100" class="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]">
                 <circle cx="50" cy="40" r="22" fill="#000000" />
@@ -432,15 +454,12 @@
             </svg>
         `;
 
-        // DISTRIBUCIÓN DE LAS 100 OVEJAS A LO LARGO DE LOS 40 NIVELES (2 o 3 por nivel)
         const sheepPerLevelArr = [];
         for (let lvl = 0; lvl < 40; lvl++) {
-            // 20 niveles tendrán 2 ovejas y 20 niveles tendrán 3 ovejas (20*2 + 20*3 = 100)
             sheepPerLevelArr.push(lvl % 2 === 0 ? 2 : 3);
         }
 
-        // ESTADO DEL JUEGO
-        let currentLevel = 0; // 0..39
+        let currentLevel = 0;
         let maxUnlockedLevel = 0;
         let completedLevels = new Set();
         let totalRescuedSheepCount = 0;
@@ -449,10 +468,40 @@
         let isAudioEnabled = true;
         let bestVoice = null;
 
-        function startApp() {
+        window.addEventListener('DOMContentLoaded', () => {
             initAudio();
             loadNaturalVoice();
-            document.getElementById('start-overlay').style.display = 'none';
+        });
+
+        function triggerNarrativeVoice() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            
+            const startBtn = document.getElementById('start-mission-btn');
+            startBtn.disabled = true;
+            startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-stone-700 text-stone-400 font-black uppercase text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center justify-center gap-2";
+            startBtn.innerHTML = `<i class="fa-solid fa-volume-high animate-pulse"></i> Narrando Reseña...`;
+
+            const text1 = document.getElementById('narrative-text-1').innerText;
+            const text2 = document.getElementById('narrative-text-2').innerText;
+            const text3 = document.getElementById('narrative-text-3').innerText;
+            const fullNarrative = `${text1} ${text2} ${text3}`;
+
+            speakText(fullNarrative, () => {
+                startBtn.disabled = false;
+                startBtn.className = "flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black font-black uppercase text-xs shadow-lg active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
+                startBtn.innerHTML = `<i class="fa-solid fa-play"></i> ¡Comenzar la Aventura!`;
+            });
+        }
+
+        function openNarrativeModal() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('narrative-overlay').style.display = 'flex';
+            triggerNarrativeVoice();
+        }
+
+        function startMainGameFromNarrative() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('narrative-overlay').style.display = 'none';
             loadSavedProgress();
             renderLevelsList();
             renderRescuedFold();
@@ -544,9 +593,6 @@
             const goatCount = 2 + Math.floor(currentLevel / 8);
             const predatorCount = 2 + Math.floor(currentLevel / 10);
             
-            const totalAnimals = targetSheepInLevel + normalSheepCount + goatCount + predatorCount;
-            
-            // Seleccionar posiciones aleatorias para las ovejas perdidas (con cinta dorada)
             lostSheepIndexes = [];
             while (lostSheepIndexes.length < targetSheepInLevel) {
                 const randIdx = Math.floor(Math.random() * (targetSheepInLevel + normalSheepCount));
@@ -555,7 +601,6 @@
                 }
             }
 
-            // Obstáculos
             const obstacleCount = 2 + Math.floor(currentLevel / 10);
             for (let i = 0; i < obstacleCount; i++) {
                 const obs = document.createElement('div');
@@ -567,7 +612,6 @@
                 pasture.appendChild(obs);
             }
 
-            // Generar Ovejas Perdidas y Normales
             for (let i = 0; i < targetSheepInLevel + normalSheepCount; i++) {
                 const btn = document.createElement('div');
                 btn.className = 'animal-btn';
@@ -584,7 +628,6 @@
                 pasture.appendChild(btn);
             }
 
-            // Generar Cabras
             for (let i = 0; i < goatCount; i++) {
                 const btn = document.createElement('div');
                 btn.className = 'animal-btn';
@@ -595,7 +638,6 @@
                 pasture.appendChild(btn);
             }
 
-            // Generar Depredadores
             const predatorTypes = ['wolf', 'lion', 'snake'];
             for (let i = 0; i < predatorCount; i++) {
                 const pType = predatorTypes[i % predatorTypes.length];
@@ -637,7 +679,6 @@
             const posX = rect.left + rect.width / 2;
             const posY = rect.top + rect.height / 2;
 
-            // RAYOS DEL LOGO, GLOBOS DE COLORES Y CINTAS DE COLORES POR CADA OVEJA
             triggerTargetedLightningStrike(posX, posY);
             spawnCelebrationBurst(posX, posY);
 
@@ -652,7 +693,6 @@
             renderRescuedFold();
 
             if (levelRemainingSheep > 0) {
-                // Aún faltan ovejas en este nivel
                 document.getElementById('feedback-title').innerText = "¡OVEJA RESCATADA!";
                 document.getElementById('feedback-desc').innerText = `+1 Oveja llevada al Redil. ¡Faltan ${levelRemainingSheep} en este nivel!`;
                 document.getElementById('feedback-message').classList.remove('hidden');
@@ -663,7 +703,6 @@
                     }, 1000);
                 });
             } else {
-                // Completadas todas las ovejas del nivel
                 if (!completedLevels.has(currentLevel)) {
                     completedLevels.add(currentLevel);
                 }
@@ -852,7 +891,6 @@
             loadLevel();
         }
 
-        // CANVAS Y EFECTOS MULTICOLOR (RAYOS, GLOBOS, CINTAS DE COLORES)
         const celebrationCanvas = document.getElementById('celebration-canvas');
         const cCtx = celebrationCanvas ? celebrationCanvas.getContext('2d') : null;
         let celebrationItems = [];
@@ -874,7 +912,6 @@
         function spawnCelebrationBurst(x, y) {
             const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#eab308'];
 
-            // Cintas coloridas
             for (let i = 0; i < 40; i++) {
                 celebrationItems.push({
                     type: Math.random() > 0.4 ? 'confetti' : 'ribbon',
@@ -889,7 +926,6 @@
                 });
             }
 
-            // Globos coloridos flotantes
             for (let i = 0; i < 10; i++) {
                 celebrationItems.push({
                     type: 'balloon',
@@ -908,7 +944,6 @@
             if (!cCtx) return;
             cCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-            // Rayos del Logo de la Estación
             if (lightningStrike && lightningStrike.alpha > 0) {
                 cCtx.save();
                 cCtx.beginPath();
